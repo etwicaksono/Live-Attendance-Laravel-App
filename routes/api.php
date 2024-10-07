@@ -3,7 +3,7 @@
 use App\Http\Controllers\Authentication\LoginController;
 use App\Http\Controllers\Authentication\LogoutController;
 use App\Http\Controllers\Authentication\RefreshTokenController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\User\CreateUserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,5 +23,12 @@ Route::post('auth/login', LoginController::class);
 Route::middleware('jwt.auth')->group(function (){
   Route::post('auth/refresh-token', RefreshTokenController::class);
   Route::post('auth/logout', LogoutController::class);
+});
+
+/* User */
+Route::middleware('jwt.auth')->group(function (){
+  Route::middleware('user-access:admin')->group(function () {
+    Route::post('user', CreateUserController::class);
+  });
 });
 
