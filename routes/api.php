@@ -7,6 +7,7 @@ use App\Http\Controllers\Employee\CreateEmployeeController;
 use App\Http\Controllers\Employee\DeleteEmployeeController;
 use App\Http\Controllers\Employee\GetEmployeeDetailController;
 use App\Http\Controllers\Employee\UpdateEmployeeController;
+use App\Http\Controllers\Presence\CheckInController;
 use App\Http\Controllers\User\CreateUserController;
 use App\Http\Controllers\User\DeleteUserController;
 use App\Http\Controllers\User\GetUserDetailController;
@@ -26,6 +27,7 @@ use Illuminate\Support\Facades\Route;
 
 const USER_BY_ID = 'user/{id}';
 const EMPLOYEE_BY_ID = 'employee/{id}';
+const PRESENCE_BY_ID = 'presence/{id}';
 
 /* Authentication */
 Route::post('auth/login', LoginController::class);
@@ -52,5 +54,10 @@ Route::middleware('jwt.auth')->group(function (){
     Route::put(EMPLOYEE_BY_ID, UpdateEmployeeController::class);
     Route::delete(EMPLOYEE_BY_ID, DeleteEmployeeController::class);
   });
+});
+
+/* Presence */
+Route::middleware('jwt.auth')->group(function (){
+  Route::post('presence/check-in', CheckInController::class);
 });
 
