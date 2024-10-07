@@ -46,7 +46,6 @@ class UpdateUserController extends Controller
 
       // Validate request data
       $validator = Validator::make($request->all(), [
-        'name' => 'required',
         'username' => 'required|unique:users,username,' . $user->id,
         'password' => 'nullable|min:8|confirmed',
         'role' => 'required|in:admin,employee',
@@ -58,7 +57,6 @@ class UpdateUserController extends Controller
       }
 
       // Update user data
-      $user->name = $request->name;
       $user->username = $request->username;
       if ($request->filled('password')) {
         $user->password = Hash::make($request->password);

@@ -12,7 +12,6 @@ class UserSeeder extends Seeder
   {
     DB::table('users')->insert([
       [
-        'name' => 'Admin User',
         'username' => 'admin',
         'password' => Hash::make('admin'),
         'role' => 'admin',
@@ -21,7 +20,6 @@ class UserSeeder extends Seeder
         'updated_at' => now(),
       ],
       [
-        'name' => 'Employee One',
         'username' => 'employee1',
         'password' => Hash::make('employee1'),
         'role' => 'employee',
