@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Authentication\LoginController;
+use App\Http\Controllers\Authentication\LogoutController;
 use App\Http\Controllers\Authentication\RefreshTokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -16,13 +17,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
 /* Authentication */
 Route::post('auth/login', LoginController::class);
-Route::middleware('api')->group(function (){
+Route::middleware('jwt.auth')->group(function (){
   Route::post('auth/refresh-token', RefreshTokenController::class);
+  Route::post('auth/logout', LogoutController::class);
 });
 
