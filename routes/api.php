@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Authentication\LoginController;
+use App\Http\Controllers\Authentication\RefreshTokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,3 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /* Authentication */
 Route::post('auth/login', LoginController::class);
+Route::middleware('api')->group(function (){
+  Route::post('auth/refresh-token', RefreshTokenController::class);
+});
+
