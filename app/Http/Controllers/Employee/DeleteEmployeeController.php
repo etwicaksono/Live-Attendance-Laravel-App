@@ -1,21 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\User;
+namespace App\Http\Controllers\Employee;
 
 use App\Helpers\ResponseHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Employee;
-use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use ReflectionClass;
 
-class DeleteUserController extends Controller
+class DeleteEmployeeController extends Controller
 {
   protected string $controllerName;
   protected string $methodName;
@@ -35,28 +33,25 @@ class DeleteUserController extends Controller
   /**
    * Handle the incoming request.
    */
-  public function __invoke($id, Request $request)
+  public function __invoke($id,Request $request)
   {
     try {
-      // Find the user by ID
-      $user = User::find($id);
-
-      if (!$user) {
-        return ResponseHelper::error(message: 'User not found', httpCode: 404);
+      // Find the employee by ID
+      $employee = Employee::find($id);
+      if (!$employee) {
+        return ResponseHelper::error(
+          message: 'Employee not found',
+          httpCode: 404
+        );
       }
 
-      // Delete references
-      Employee::where('user_id', $id)
-        ->delete();
+      // Delete employee
+      $employee->delete();
 
-      // Delete the user
-      $user->delete();
-
-      // Return response JSON user is deleted
+      // Return response JSON employee is deleted
       return ResponseHelper::success(
-        message: 'User deleted successfully',
+        message: 'Employee deleted successfully',
       );
-
     } catch (Exception $e) {
       Log::error('Error on ' . $this->controllerName . ':' . $this->methodName . ': ' . $e->getMessage());
       $meta = [

@@ -4,6 +4,7 @@ use App\Http\Controllers\Authentication\LoginController;
 use App\Http\Controllers\Authentication\LogoutController;
 use App\Http\Controllers\Authentication\RefreshTokenController;
 use App\Http\Controllers\Employee\CreateEmployeeController;
+use App\Http\Controllers\Employee\DeleteEmployeeController;
 use App\Http\Controllers\Employee\UpdateEmployeeController;
 use App\Http\Controllers\User\CreateUserController;
 use App\Http\Controllers\User\DeleteUserController;
@@ -47,7 +48,7 @@ Route::middleware('jwt.auth')->group(function (){
   Route::middleware('user-access:admin')->group(function () {
     Route::post('employee', CreateEmployeeController::class);
     Route::put(EMPLOYEE_BY_ID, UpdateEmployeeController::class);
-    Route::delete(EMPLOYEE_BY_ID, DeleteUserController::class);
+    Route::delete(EMPLOYEE_BY_ID, DeleteEmployeeController::class);
   });
 });
 
