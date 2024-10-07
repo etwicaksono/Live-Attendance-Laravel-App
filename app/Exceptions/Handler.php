@@ -2,7 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Helpers\ResponseHelper;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -26,5 +31,21 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+      $this->renderable(function (NotFoundHttpException $e, $request) {
+        return ResponseHelper::error(message: 'Route Not Found', httpCode: 404);
+      });
+
+      $this->renderable(function (UnauthorizedHttpException $e, $request) {
+        return ResponseHelper::error(message: 'Unauthorized', httpCode: 401);
+      });
+
+      $this->renderable(function (MethodNotAllowedException $e, $request) {
+        return ResponseHelper::error(message: $e->getMessage(), httpCode: 405);
+      });
+
+      $this->renderable(function (MethodNotAllowedHttpException $e, $request) {
+        return ResponseHelper::error(message: $e->getMessage(), httpCode: 405);
+      });
     }
 }
