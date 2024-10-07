@@ -19,8 +19,16 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'email',
+        'username',
         'password',
+        'role',
+        'is_active',
+    ];
+
+    // Define default values for attributes
+    protected $attributes = [
+        'role' => 'user',
+        'is_active' => true,
     ];
 
     /**
@@ -39,7 +47,7 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'is_active' => 'boolean',
         'password' => 'hashed',
     ];
 }
