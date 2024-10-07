@@ -4,6 +4,7 @@ use App\Http\Controllers\Authentication\LoginController;
 use App\Http\Controllers\Authentication\LogoutController;
 use App\Http\Controllers\Authentication\RefreshTokenController;
 use App\Http\Controllers\User\CreateUserController;
+use App\Http\Controllers\User\DeleteUserController;
 use App\Http\Controllers\User\UpdateUserController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,7 @@ Route::middleware('jwt.auth')->group(function (){
   Route::middleware('user-access:admin')->group(function () {
     Route::post('user', CreateUserController::class);
     Route::put('user/{id}', UpdateUserController::class);
+    Route::delete('user/{id}', DeleteUserController::class);
   });
 });
 
