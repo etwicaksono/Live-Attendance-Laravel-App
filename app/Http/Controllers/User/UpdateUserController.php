@@ -49,7 +49,7 @@ class UpdateUserController extends Controller
         'name' => 'required',
         'username' => 'required|unique:users,username,' . $user->id,
         'password' => 'nullable|min:8|confirmed',
-        'role' => 'required|in:admin,user',
+        'role' => 'required|in:admin,employee',
         'is_active' => 'required|in:0,1',
       ]);
 

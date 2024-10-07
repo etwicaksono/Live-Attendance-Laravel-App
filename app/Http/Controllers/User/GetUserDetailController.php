@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use ReflectionClass;
 
-class CreateUserController extends Controller
+class GetUserDetailController extends Controller
 {
   protected string $controllerName;
   protected string $methodName;
@@ -34,36 +34,21 @@ class CreateUserController extends Controller
   /**
    * Handle the incoming request.
    */
-  public function __invoke(Request $request)
+  public function __invoke($id, Request $request)
   {
     try {
-      $validator = Validator::make($request->all(), [
-        'name' => 'required',
-        'username' => 'required|unique:users',
-        'password' => 'required|min:8|confirmed',
-        'role' => 'required|in:admin,employee',
-        'is_active' => 'required|in:0,1',
-      ]);
-      if ($validator->fails()) {
-        return ResponseHelper::error(message: 'Validation Error', data: ['validation' => $validator->errors()], httpCode: 422);
+      // Find the user by ID
+      $user = User::find($id);
+
+      if (!$user) {
+        return ResponseHelper::error(message: 'User not found', httpCode: 404);
       }
 
-      //create user
-      $user = User::create([
-        'name' => $request->name,
-        'username' => $request->username,
-        'password' => Hash::make($request->password),
-        'role' => $request->role,
-        'is_active' => $request->is_active
-      ]);
+      // Return response JSON user is updated
+      return ResponseHelper::success(
+        data: $user
+      );
 
-      //return response JSON user is created
-      if ($user) {
-        return ResponseHelper::success(data: $user, httpCode: 201);
-      }
-
-      //return JSON process insert failed
-      return ResponseHelper::error(message: 'Failed to register user', httpCode: 409);
     } catch (Exception $e) {
       Log::error('Error on ' . $this->controllerName . ':' . $this->methodName . ': ' . $e->getMessage());
       $meta = [

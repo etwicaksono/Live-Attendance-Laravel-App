@@ -5,6 +5,7 @@ use App\Http\Controllers\Authentication\LogoutController;
 use App\Http\Controllers\Authentication\RefreshTokenController;
 use App\Http\Controllers\User\CreateUserController;
 use App\Http\Controllers\User\DeleteUserController;
+use App\Http\Controllers\User\GetUserDetailController;
 use App\Http\Controllers\User\UpdateUserController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+const USER_BY_ID = 'user/{id}';
 
 /* Authentication */
 Route::post('auth/login', LoginController::class);
@@ -29,10 +31,11 @@ Route::middleware('jwt.auth')->group(function (){
 
 /* User */
 Route::middleware('jwt.auth')->group(function (){
+  Route::get(USER_BY_ID, GetUserDetailController::class);
   Route::middleware('user-access:admin')->group(function () {
     Route::post('user', CreateUserController::class);
-    Route::put('user/{id}', UpdateUserController::class);
-    Route::delete('user/{id}', DeleteUserController::class);
+    Route::put(USER_BY_ID, UpdateUserController::class);
+    Route::delete(USER_BY_ID, DeleteUserController::class);
   });
 });
 
