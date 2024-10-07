@@ -69,7 +69,6 @@ class UpdateUserController extends Controller
 
       // Return response JSON user is updated
       return ResponseHelper::success(data: $user, httpCode: 200);
-
     } catch (Exception $e) {
       Log::error('Error on ' . $this->controllerName . ':' . $this->methodName . ': ' . $e->getMessage());
       $meta = [
