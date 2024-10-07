@@ -21,11 +21,3 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 /* Authentication */
 Route::post('auth/login', LoginController::class);
-//Route::post('auth/refresh', RefreshTokenController::class);
-Route::middleware('jwt.auth')->group(function () {
-//    Route::post('auth/logout', LogoutController::class);
-});
-
-
-
-//Route::post('auth/registration', RegistrationController::class);

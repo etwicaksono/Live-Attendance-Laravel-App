@@ -13,8 +13,8 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 class LoginController extends Controller
 {
-    protected $controllerName;
-    protected $methodName;
+    protected string $controllerName;
+    protected string $methodName;
 
     public function __construct()
     {
