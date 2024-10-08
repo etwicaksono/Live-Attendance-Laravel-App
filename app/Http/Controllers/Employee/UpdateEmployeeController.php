@@ -67,7 +67,7 @@ class UpdateEmployeeController extends Controller
       // Return JSON process update failed
       return ResponseHelper::error(
         message: 'Failed to update employee',
-        httpCode: 409
+        httpCode: 500
       );
     } catch (Exception $e) {
       Log::error('Error on ' . $this->controllerName . ':' . $this->methodName . ': ' . $e->getMessage());

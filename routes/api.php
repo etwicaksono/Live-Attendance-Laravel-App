@@ -8,6 +8,7 @@ use App\Http\Controllers\Employee\DeleteEmployeeController;
 use App\Http\Controllers\Employee\GetEmployeeDetailController;
 use App\Http\Controllers\Employee\UpdateEmployeeController;
 use App\Http\Controllers\Presence\CheckInController;
+use App\Http\Controllers\Presence\CheckOutController;
 use App\Http\Controllers\User\CreateUserController;
 use App\Http\Controllers\User\DeleteUserController;
 use App\Http\Controllers\User\GetUserDetailController;
@@ -58,6 +59,7 @@ Route::middleware('jwt.auth')->group(function (){
 
 /* Presence */
 Route::middleware('jwt.auth')->group(function (){
-  Route::post('presence/check-in', CheckInController::class)->name('presence.check-in');
+  Route::post('presence/check-in', CheckInController::class);
+  Route::post('presence/check-out', CheckOutController::class);
 });
 

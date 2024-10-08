@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 use JWTAuth;
 use ReflectionClass;
 
-class CheckInController extends Controller
+class CheckOutController extends Controller
 {
   protected string $controllerName;
   protected string $methodName;
@@ -54,20 +54,27 @@ class CheckInController extends Controller
         return ResponseHelper::error(message: 'Unauthorized, failed to get user data from token', httpCode: 401);
       }
 
-
       $isCheckIn = Presence::where('user_id',$user->id)
         ->where('check_in','!=',null)
         ->whereDate('created_at', Carbon::today())
         ->exists();
-      if ($isCheckIn) {
-        return ResponseHelper::error(message: 'Already check in today', httpCode: 400);
+      if (!$isCheckIn) {
+        return ResponseHelper::error(message: 'Check in not found, please check in first', httpCode: 400);
+      }
+
+      $isCheckOut = Presence::where('user_id',$user->id)
+        ->where('check_out','!=',null)
+        ->whereDate('created_at', Carbon::today())
+        ->exists();
+      if ($isCheckOut) {
+        return ResponseHelper::error(message: 'Already check out today', httpCode: 400);
       }
 
       $fileUrl = null;
       if ($request->hasFile('photo')) {
         try {
           $file = $request->file('photo');
-          $filePath = 'check-in/' . Str::slug(pathinfo($user->username, PATHINFO_FILENAME)) . '-' . time() . '.' . $file->getClientOriginalExtension();
+          $filePath = 'check-out/' . Str::slug(pathinfo($user->username, PATHINFO_FILENAME)) . '-' . time() . '.' . $file->getClientOriginalExtension();
 
           // Upload to MinIO and check if upload succeeded
           $uploaded = Storage::disk('minio')->put($filePath, file_get_contents($file));
@@ -86,16 +93,17 @@ class CheckInController extends Controller
         }
       }
 
-      Presence::create([
-        'user_id' => $user->id,
-        'check_in' => Carbon::now(),
-        'latitude_check_in' => $request->latitude,
-        'longitude_check_in' => $request->longitude,
-        'photo_check_in' => $fileUrl
+      Presence::where('user_id', $user->id)
+        ->whereDate('created_at', Carbon::today())
+        ->update([
+        'check_out' => Carbon::now(),
+        'latitude_check_out' => $request->latitude,
+        'longitude_check_out' => $request->longitude,
+        'photo_check_out' => $fileUrl
       ]);
 
       //return JSON process insert failed
-      return ResponseHelper::success(message: 'Success check in', data: null, httpCode: 201);
+      return ResponseHelper::success(message: 'Success check out', data: null, httpCode: 201);
     } catch (Exception $e) {
       Log::error('Error on ' . $this->controllerName . ':' . $this->methodName . ': ' . $e->getMessage());
       $meta = [

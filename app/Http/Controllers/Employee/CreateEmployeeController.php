@@ -58,7 +58,7 @@ class CreateEmployeeController extends Controller
       }
 
       //return JSON process insert failed
-      return ResponseHelper::error(message: 'Failed to create employee', httpCode: 409);
+      return ResponseHelper::error(message: 'Failed to create employee', httpCode: 500);
     } catch (Exception $e) {
       Log::error('Error on ' . $this->controllerName . ':' . $this->methodName . ': ' . $e->getMessage());
       $meta = [
