@@ -58,6 +58,6 @@ Route::middleware('jwt.auth')->group(function (){
 
 /* Presence */
 Route::middleware('jwt.auth')->group(function (){
-  Route::post('presence/check-in', CheckInController::class);
+  Route::post('presence/check-in', CheckInController::class)->name('presence.check-in');
 });
 

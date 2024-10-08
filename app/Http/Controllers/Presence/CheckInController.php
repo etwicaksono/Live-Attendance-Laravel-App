@@ -11,6 +11,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use JWTAuth;
@@ -62,12 +63,35 @@ class CheckInController extends Controller
         return ResponseHelper::error(message: 'Already check in today', httpCode: 409);
       }
 
+      $fileUrl = null;
+      if ($request->hasFile('photo')) {
+        try {
+          $file = $request->file('photo');
+          $filePath = 'check-in/' . Str::slug(pathinfo($user->username, PATHINFO_FILENAME)) . '-' . time() . '.' . $file->getClientOriginalExtension();
+
+          // Upload to MinIO and check if upload succeeded
+          $uploaded = Storage::disk('minio')->put($filePath, file_get_contents($file));
+
+          if (!$uploaded) {
+            Log::error('Failed to upload file to MinIO at ' . $filePath);
+            return ResponseHelper::error(message: 'File upload failed', httpCode: 500);
+          }
+
+          // Get the file URL after upload
+          $relativePath = Storage::disk('minio')->url($filePath);
+          $fileUrl = parse_url($relativePath, PHP_URL_PATH);
+        } catch (Exception $e) {
+          Log::error('Error on ' . $this->controllerName . ':' . $this->methodName . ': ' . $e->getMessage());
+          return ResponseHelper::error(message: 'File upload failed: ' . $e->getMessage(), httpCode: 500);
+        }
+      }
+
       Presence::create([
         'user_id' => $user->id,
         'check_in' => Carbon::now(),
         'check_in_latitude' => $request->latitude,
         'check_in_longitude' => $request->longitude,
-//        'check_in_photo' => $request->photo
+        'photo_check_in' => $fileUrl
       ]);
 
       //return JSON process insert failed
