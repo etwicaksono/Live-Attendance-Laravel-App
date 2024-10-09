@@ -6,6 +6,7 @@ use App\Http\Controllers\Authentication\RefreshTokenController;
 use App\Http\Controllers\Employee\CreateEmployeeController;
 use App\Http\Controllers\Employee\DeleteEmployeeController;
 use App\Http\Controllers\Employee\GetEmployeeDetailController;
+use App\Http\Controllers\Employee\GetMyProfileController;
 use App\Http\Controllers\Employee\UpdateEmployeeController;
 use App\Http\Controllers\Presence\CheckInController;
 use App\Http\Controllers\Presence\CheckOutController;
@@ -50,6 +51,7 @@ Route::middleware('jwt.auth')->group(function (){
 /* Employee */
 Route::middleware('jwt.auth')->group(function (){
   Route::get(EMPLOYEE_BY_ID, GetEmployeeDetailController::class);
+  Route::get('my-profile', GetMyProfileController::class);
   Route::middleware('user-access:admin')->group(function () {
     Route::post('employee', CreateEmployeeController::class);
     Route::put(EMPLOYEE_BY_ID, UpdateEmployeeController::class);
