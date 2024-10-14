@@ -10,6 +10,7 @@ use App\Http\Controllers\Employee\GetMyProfileController;
 use App\Http\Controllers\Employee\UpdateEmployeeController;
 use App\Http\Controllers\Presence\CheckInController;
 use App\Http\Controllers\Presence\CheckOutController;
+use App\Http\Controllers\Presence\CheckStatusController;
 use App\Http\Controllers\User\CreateUserController;
 use App\Http\Controllers\User\DeleteUserController;
 use App\Http\Controllers\User\GetUserDetailController;
@@ -33,13 +34,13 @@ const PRESENCE_BY_ID = 'presence/{id}';
 
 /* Authentication */
 Route::post('auth/login', LoginController::class);
-Route::middleware('jwt.auth')->group(function (){
+Route::middleware('jwt.auth')->group(function () {
   Route::post('auth/refresh-token', RefreshTokenController::class);
   Route::post('auth/logout', LogoutController::class);
 });
 
 /* User */
-Route::middleware('jwt.auth')->group(function (){
+Route::middleware('jwt.auth')->group(function () {
   Route::get(USER_BY_ID, GetUserDetailController::class);
   Route::middleware('user-access:admin')->group(function () {
     Route::post('user', CreateUserController::class);
@@ -49,7 +50,7 @@ Route::middleware('jwt.auth')->group(function (){
 });
 
 /* Employee */
-Route::middleware('jwt.auth')->group(function (){
+Route::middleware('jwt.auth')->group(function () {
   Route::get(EMPLOYEE_BY_ID, GetEmployeeDetailController::class);
   Route::get('my-profile', GetMyProfileController::class);
   Route::middleware('user-access:admin')->group(function () {
@@ -60,7 +61,8 @@ Route::middleware('jwt.auth')->group(function (){
 });
 
 /* Presence */
-Route::middleware('jwt.auth')->group(function (){
+Route::middleware('jwt.auth')->group(function () {
+  Route::get('presence/check-status', CheckStatusController::class);
   Route::post('presence/check-in', CheckInController::class);
   Route::post('presence/check-out', CheckOutController::class);
 });
